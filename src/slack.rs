@@ -1,11 +1,11 @@
 use chrono::NaiveDateTime;
-use error::{Error, ErrorKind, Result};
+use crate::error::{Error, ErrorKind, Result};
 use futures::*;
-use reqwest::async::Client;
+use reqwest::r#async::Client;
 use reqwest::Url;
 use serde::{Serialize, Serializer};
 use std::fmt;
-use {Payload, TryInto};
+use crate::{Payload, TryInto};
 
 /// Handles sending messages to slack
 #[derive(Debug, Clone)]
@@ -222,10 +222,10 @@ impl Serialize for SlackUserLink {
 #[cfg(test)]
 mod test {
     use chrono::NaiveDateTime;
-    use slack::{Slack, SlackLink};
+    use crate::slack::{Slack, SlackLink};
     #[cfg(feature = "unstable")]
     use test::Bencher;
-    use {serde_json, AttachmentBuilder, Field, Parse, PayloadBuilder, SlackText};
+    use crate::{serde_json, AttachmentBuilder, Field, Parse, PayloadBuilder, SlackText};
 
     #[test]
     fn slack_incoming_url_test() {
