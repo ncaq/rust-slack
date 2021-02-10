@@ -1,9 +1,7 @@
 use crate::error::{Error, ErrorKind, Result};
 use crate::{Payload, TryInto};
 use chrono::NaiveDateTime;
-use futures::*;
-use reqwest::r#async::Client;
-use reqwest::Url;
+use reqwest::*;
 use serde::{Serialize, Serializer};
 use std::fmt;
 
@@ -23,24 +21,8 @@ impl Slack {
         })
     }
 
-    /// Send payload to slack service
-    pub fn send(&self, payload: &Payload) -> Result<()> {
-        let response = self
-            .client
-            .post(self.hook.clone())
-            .json(payload)
-            .send()
-            .wait()?;
-
-        if response.status().is_success() {
-            Ok(())
-        } else {
-            Err(ErrorKind::Slack(format!("HTTP error {}", response.status())).into())
-        }
-    }
-
     /// Send payload to slack service, returning a future Response.
-    pub fn async_send(&self, payload: &Payload) -> impl Future<Item = (), Error = Error> {
+    pub async fn send(&self, payload: &Payload) -> Result<()> {
         self.client
             .post(self.hook.clone())
             .json(payload)
@@ -223,8 +205,9 @@ impl Serialize for SlackUserLink {
 #[cfg(test)]
 mod test {
     use crate::slack::{Slack, SlackLink};
-    use crate::{serde_json, AttachmentBuilder, Field, Parse, PayloadBuilder, SlackText};
+    use crate::{AttachmentBuilder, Field, Parse, PayloadBuilder, SlackText};
     use chrono::NaiveDateTime;
+    use serde_json;
     #[cfg(feature = "unstable")]
     use test::Bencher;
 

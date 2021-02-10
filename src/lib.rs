@@ -15,18 +15,10 @@
 //! supports entire messaging API, including attachments and fields
 //! also support for built-in colors as well as any hex colors
 
-extern crate reqwest;
-
-extern crate chrono;
 #[macro_use]
 extern crate error_chain;
-extern crate futures;
-extern crate hex as hexx;
-extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-extern crate serde_json;
-extern crate url_serde;
 
 pub use crate::attachment::{Action, Attachment, AttachmentBuilder, Field, Section};
 pub use crate::error::{Error, Result};

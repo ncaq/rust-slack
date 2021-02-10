@@ -1,6 +1,6 @@
 use crate::error::{Error, ErrorKind};
-use crate::hexx::FromHex;
 use crate::TryFrom;
+use hex::FromHex;
 
 /// A `HexColor` `String` can be one of:
 ///
