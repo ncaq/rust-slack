@@ -1,11 +1,11 @@
-use chrono::NaiveDateTime;
 use crate::error::{Error, ErrorKind, Result};
+use crate::{Payload, TryInto};
+use chrono::NaiveDateTime;
 use futures::*;
 use reqwest::r#async::Client;
 use reqwest::Url;
 use serde::{Serialize, Serializer};
 use std::fmt;
-use crate::{Payload, TryInto};
 
 /// Handles sending messages to slack
 #[derive(Debug, Clone)]
@@ -136,7 +136,8 @@ impl<'a> From<&'a [SlackTextContent]> for SlackText {
                 SlackTextContent::Text(ref s) => format!("{}", s),
                 SlackTextContent::Link(ref link) => format!("{}", link),
                 SlackTextContent::User(ref u) => format!("{}", u),
-            }).collect::<Vec<String>>()
+            })
+            .collect::<Vec<String>>()
             .join(" ");
         SlackText::new_raw(st)
     }
@@ -221,11 +222,11 @@ impl Serialize for SlackUserLink {
 
 #[cfg(test)]
 mod test {
-    use chrono::NaiveDateTime;
     use crate::slack::{Slack, SlackLink};
+    use crate::{serde_json, AttachmentBuilder, Field, Parse, PayloadBuilder, SlackText};
+    use chrono::NaiveDateTime;
     #[cfg(feature = "unstable")]
     use test::Bencher;
-    use crate::{serde_json, AttachmentBuilder, Field, Parse, PayloadBuilder, SlackText};
 
     #[test]
     fn slack_incoming_url_test() {
@@ -268,16 +269,14 @@ mod test {
 
     #[test]
     fn json_complete_payload_test() {
-        let a = vec![
-            AttachmentBuilder::new("fallback <&>")
-                .text("text <&>")
-                .color("#6800e8")
-                .fields(vec![Field::new("title", "value", None)])
-                .title_link("https://title_link.com/")
-                .ts(&NaiveDateTime::from_timestamp(123_456_789, 0))
-                .build()
-                .unwrap(),
-        ];
+        let a = vec![AttachmentBuilder::new("fallback <&>")
+            .text("text <&>")
+            .color("#6800e8")
+            .fields(vec![Field::new("title", "value", None)])
+            .title_link("https://title_link.com/")
+            .ts(&NaiveDateTime::from_timestamp(123_456_789, 0))
+            .build()
+            .unwrap()];
 
         let p = PayloadBuilder::new()
             .text("test message")

@@ -1,8 +1,8 @@
-use crate::{Attachment, SlackText, TryInto};
-use crate::helper::bool_to_u8;
 use crate::error::{Error, Result};
-use serde::{Serialize, Serializer};
+use crate::helper::bool_to_u8;
+use crate::{Attachment, SlackText, TryInto};
 use reqwest::Url;
+use serde::{Serialize, Serializer};
 
 /// Payload to send to slack
 /// https://api.slack.com/incoming-webhooks
